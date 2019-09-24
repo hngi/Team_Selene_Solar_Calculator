@@ -22,12 +22,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        sp_tv = (TextView) findViewById(R.id.sp_tv);
-        baloon = (ImageView) findViewById(R.id.baloon);
-        frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
-        fromtop = AnimationUtils.loadAnimation(this, R.anim.fromtop);
-        sp_tv.setAnimation(frombottom);
-        baloon.setAnimation(fromtop);
+//        sp_tv = (TextView) findViewById(R.id.sp_tv);
+//        baloon = (ImageView) findViewById(R.id.baloon);
+//        frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
+//        fromtop = AnimationUtils.loadAnimation(this, R.anim.fromtop);
+//        sp_tv.setAnimation(frombottom);
+//        baloon.setAnimation(fromtop);
 
         new Handler().postDelayed(new Runnable() {
 
@@ -37,10 +37,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             public void run() {
                 Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-
                 startActivity(i);
-                // close this activity
-                finish();
+                finish();        // close this activity
             }
 
         }, 3 * 1000); // wait for 3 seconds
