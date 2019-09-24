@@ -1,33 +1,38 @@
 package com.example.solarcalculator;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    TextView sp_tv;
-    ImageView baloon;
+    TextView mBoldText;
+    ImageView mlightening;
     Animation frombottom;
     Animation fromtop;
+    TextView mSmallText;
+    RelativeLayout mConstraints;
+    ImageView mBold_lightening;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-//        sp_tv = (TextView) findViewById(R.id.sp_tv);
-//        baloon = (ImageView) findViewById(R.id.baloon);
-//        frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
-//        fromtop = AnimationUtils.loadAnimation(this, R.anim.fromtop);
-//        sp_tv.setAnimation(frombottom);
-//        baloon.setAnimation(fromtop);
+        mConstraints = findViewById(R.id.constraints);
+        mlightening = findViewById(R.id.lightening);
+
+        frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
+        fromtop = AnimationUtils.loadAnimation(this, R.anim.fromtop);
+
+        mConstraints.setAnimation(frombottom);
+        mlightening.setAnimation(fromtop);
 
         new Handler().postDelayed(new Runnable() {
 
@@ -41,6 +46,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();        // close this activity
             }
 
-        }, 3 * 1000); // wait for 3 seconds
+        },  4000); // wait for 3 seconds
     }
 }
