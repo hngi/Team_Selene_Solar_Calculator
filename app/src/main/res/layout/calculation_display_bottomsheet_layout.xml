@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@+id/cal_display_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8sp">
+
+        <TextView
+            android:id="@+id/cal_display_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/selene_solar_calculator"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cal_display_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Easy, Fast, Eco-Friendly"
+            android:textColor="@android:color/white"
+            android:textSize="13sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cal_display_linear_layout_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cal_display_linear_layout"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:padding="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cal_display_cardview1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardPreventCornerOverlap="true"
+            android:layout_marginBottom="10dp"
+            android:background="#1111">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8sp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="Total WattHour of Appliances" />
+
+                <TextView
+                    android:id="@+id/cal_display_total_watt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="300Wh"
+                    android:gravity=""/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cal_display_cardview2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardPreventCornerOverlap="true"
+            android:layout_marginBottom="10dp"
+            android:background="#1111">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8sp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="Recommended Solar Panel Power" />
+
+                <TextView
+                    android:id="@+id/cal_display_rec_solar_power"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="600Wh" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cal_display_cardview3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardPreventCornerOverlap="true"
+            android:layout_marginBottom="10dp"
+            android:background="#1111">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="8sp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="Recommended Battery Capaity" />
+
+                <TextView
+                    android:id="@+id/cal_rec_battery_capacity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tool:text="300Wh" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <Button
+        android:text="@string/dismiss_btn_text"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"
+        android:background="@drawable/button_background"
+        android:layout_below="@id/cal_display_linear_layout_body"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Solar Calculator</string>
+    <string name="dismiss_btn_text">Dismiss</string>
+    <string name="selene_solar_calculator">Selene Solar Calculator</string>
 </resources>
