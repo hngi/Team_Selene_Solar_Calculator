@@ -3,6 +3,7 @@
     <string name="welcome_to_solar_calculator">Solar Calculator</string>
     <string name="tag_line">Easy. Fast. Eco-Friendly</string>
 
+
     //BottomSheet Calcution layout strings
     <string name="dismiss_btn_text">Dismiss</string>
     <string name="selene_solar_calculator">Selene Solar Calculator</string>
