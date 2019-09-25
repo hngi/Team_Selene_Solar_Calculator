@@ -19,7 +19,6 @@ public class CalculateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calculate);
 
         num_picker = findViewById(R.id.num_picker);
         num_picker.setMaxValue(9);
