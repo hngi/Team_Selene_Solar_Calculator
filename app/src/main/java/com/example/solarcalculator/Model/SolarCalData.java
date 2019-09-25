@@ -52,7 +52,7 @@ public class SolarCalData implements Parcelable {
     };
 
 
-    //getters & setters
+    //getters
     public String getDeviceName() {
         return deviceName;
     }
