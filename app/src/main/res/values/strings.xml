@@ -2,6 +2,7 @@
     <string name="app_name">Solar Calculator</string>
     <string name="welcome_to_solar_calculator">Solar Calculator</string>
     <string name="tag_line">Easy. Fast. Eco-Friendly</string>
+    <string name="how_long_access">How long do you have access to sunlight?</string>
 
 
     //BottomSheet Calcution layout strings
