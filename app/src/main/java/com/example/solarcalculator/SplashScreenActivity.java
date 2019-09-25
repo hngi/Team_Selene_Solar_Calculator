@@ -11,6 +11,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/*
+ * Created by Utibe Etim (@Ut_et)
+ * */
+
+
 public class SplashScreenActivity extends AppCompatActivity {
     TextView mBoldText;
     ImageView mlightening;
