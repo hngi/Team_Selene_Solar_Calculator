@@ -1,4 +1,4 @@
-package Model;
+package com.example.solarcalculator.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

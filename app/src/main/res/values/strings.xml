@@ -2,4 +2,13 @@
     <string name="app_name">Solar Calculator</string>
     <string name="welcome_to_solar_calculator">Solar Calculator</string>
     <string name="tag_line">Easy. Fast. Eco-Friendly</string>
+    <string name="how_long_access">How long do you have access to sunlight?</string>
+
+
+    //BottomSheet Calcution layout strings
+    <string name="dismiss_btn_text">Dismiss</string>
+    <string name="selene_solar_calculator">Selene Solar Calculator</string>
+    <string name="total_watthour_of_appliances">Total WattHour of Appliances</string>
+    <string name="recommended_solar_panel_power">Recommended Solar Panel Power</string>
+    <string name="recommended_battery_capaity">Recommended Battery Capaity</string>
 </resources>

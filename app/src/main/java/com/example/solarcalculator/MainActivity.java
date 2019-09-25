@@ -1,24 +1,31 @@
 package com.example.solarcalculator;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
+import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
+import com.example.solarcalculator.BottomSheet.CustomAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.SolarCalData;
+import com.example.solarcalculator.Model.SolarCalData;
+
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String TAG = "solarcalculator";
     ArrayList<SolarCalData> sList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -68,5 +75,37 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(customAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CalculateActivity.class));
+            }
+        });
+
+
+    }
+
+
+
+
+    private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
+        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours);
+        bottomSheet.setCancelable(false);
+        bottomSheet.show(getSupportFragmentManager(),null);
+    }
+
+    private void showToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, CalculateActivity.class));
+            }
+        });
+
     }
 }

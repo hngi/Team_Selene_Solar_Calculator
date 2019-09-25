@@ -1,4 +1,4 @@
-package com.example.solarcalculator;
+package com.example.solarcalculator.BottomSheet;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -9,8 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.solarcalculator.R;
+
 import java.util.ArrayList;
-import Model.SolarCalData;
+import com.example.solarcalculator.Model.SolarCalData;
 
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {

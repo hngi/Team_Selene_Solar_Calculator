@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     tools:context=".MainActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -54,7 +55,6 @@
             android:layout_marginBottom="15dp"
             android:background="@drawable/sign_up_rounded"
             android:backgroundTint="#475ABE"
-            android:fontFamily=""
             android:gravity="center_horizontal|center_vertical"
             android:shadowRadius="4"
             android:text="CALCULATE"
