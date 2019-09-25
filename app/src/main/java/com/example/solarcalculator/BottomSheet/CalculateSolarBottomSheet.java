@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.solarcalculator.Model.SolarCalData;
 import com.example.solarcalculator.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -17,6 +16,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.solarcalculator.Model.SolarCalData;
 
 public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
     public static final String NEW_INSTANCE_LIST_KEY = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_LIST_KEY";

@@ -52,7 +52,7 @@ public class SolarCalData implements Parcelable {
     };
 
 
-    //getters
+    //getters & setters
     public String getDeviceName() {
         return deviceName;
     }
@@ -77,6 +77,7 @@ public class SolarCalData implements Parcelable {
         return new Builder(deviceName);
     }
 
+    public int getWattage() { return getVoltage()*getAmps(); }
 
 
     //Builder Class & Methods

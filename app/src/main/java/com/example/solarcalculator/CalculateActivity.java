@@ -1,21 +1,20 @@
 package com.example.solarcalculator;
-
-/*
- * Created by Utibe Etim (@Ut_et)
- * */
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.PopupWindow;
 
 public class CalculateActivity extends AppCompatActivity {
     private NumberPicker num_picker;
     private String[] pickerVals;
+    private PopupWindow popUp;
+    private LinearLayout layout;
+    private LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +35,18 @@ public class CalculateActivity extends AppCompatActivity {
             }
         });
 
+
+        popUp = new PopupWindow(this);
+        layout = new LinearLayout(this);
+        mainLayout = new LinearLayout(this);
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         int width = dm.widthPixels;
         int heigth = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*.8), (int) (heigth*.7));
+        getWindow().setLayout((int) (width*.8), (int) (heigth*.5));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
