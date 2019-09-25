@@ -70,7 +70,7 @@
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    tool:text="Total WattHour of Appliances" />
+                    android:text="@string/total_watthour_of_appliances" />
 
                 <TextView
                     android:id="@+id/cal_display_total_watt"
@@ -108,7 +108,7 @@
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    tool:text="Recommended Solar Panel Power" />
+                    android:text="@string/recommended_solar_panel_power" />
 
                 <TextView
                     android:id="@+id/cal_display_rec_solar_power"
@@ -145,7 +145,7 @@
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    tool:text="Recommended Battery Capaity" />
+                    android:text="@string/recommended_battery_capaity" />
 
                 <TextView
                     android:id="@+id/cal_rec_battery_capacity"
@@ -163,6 +163,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/cal_display_dismiss_btn"
         android:text="@string/dismiss_btn_text"
         android:textSize="14sp"
         android:textColor="@android:color/white"
@@ -170,6 +171,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="48dp"
         android:paddingEnd="48dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/button_background"
         android:layout_below="@id/cal_display_linear_layout_body"
         android:layout_centerHorizontal="true"/>

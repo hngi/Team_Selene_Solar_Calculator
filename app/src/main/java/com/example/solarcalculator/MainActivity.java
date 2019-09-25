@@ -3,12 +3,17 @@ package com.example.solarcalculator;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
 import com.example.solarcalculator.Model.SolarCalData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "solarcalculator";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,15 +21,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        //How To Use Model
-        SolarCalData solarCalData = SolarCalData.getBuilder("TV")
-                .amps(200)
-                .voltage(35)
-                .hoursUsedDaily(12)
-                .quantity(7)
-                .build();
+
+    }
 
 
+
+
+    private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
+        CalculateSolarBottomSheet bottomSheet=CalculateSolarBottomSheet.newInstance(solarCalDataList,userSunlightAccessInHours);
+        bottomSheet.setCancelable(false);
+        bottomSheet.show(getSupportFragmentManager(),null);
     }
 
     private void showToast(String msg){
