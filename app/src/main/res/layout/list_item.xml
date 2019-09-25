@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="30dp"
+    android:layout_marginTop="3dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,52 +16,80 @@
         android:paddingBottom="12dp">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/appliance_view"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:paddingLeft="7dp"
+            android:paddingTop="5dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="5dp"
+            android:text="Appliances"
+            android:gravity="left"
+            android:textAlignment="gravity"
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/qty_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:padding="5dp"
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:text="Qty"
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/amps_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:padding="5dp"
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:text="Amps"
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/volts_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:padding="5dp"
+            android:text="Volts"
+            android:gravity="left"
+            android:textAlignment="gravity"
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/hrs_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:gravity="left"
+            android:textAlignment="gravity"
+            android:padding="5dp"
+            android:text="Hrs/Day"
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/watts_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="TextView"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/oensansbold"
+            android:padding="5dp"
+            android:text="Watts"
+            android:gravity="right"
+            android:textAlignment="gravity"
             android:textSize="12dp" />
 
     </LinearLayout>
