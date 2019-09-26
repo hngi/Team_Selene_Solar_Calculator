@@ -11,4 +11,6 @@
     <string name="total_watthour_of_appliances">Total WattHour of Appliances</string>
     <string name="recommended_solar_panel_power">Recommended Solar Panel Power</string>
     <string name="recommended_battery_capaity">Recommended Battery Capaity</string>
+    <string name="please_calculate">Please Calculate</string>
+    <string name="clear_all">Clear All</string>
 </resources>
