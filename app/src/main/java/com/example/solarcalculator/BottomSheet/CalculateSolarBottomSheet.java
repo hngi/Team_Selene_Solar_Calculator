@@ -69,16 +69,18 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
 
     private void displaySolarData() {
         calTotalWattAndTotalWattHour();
-        totalWattHourTextView.setText(calTotalWattHour());
-        recSolarPowerTextView.setText(calRecSolarPowerNeeded());
-        recPowerCapacityTextView.setText(calRecBatteryCapacity());
+        totalWattHourTextView.setText(String.format("%sWh", calTotalWattHour()));
+        recSolarPowerTextView.setText(String.format("%sWatts", calRecSolarPowerNeeded()));
+        recPowerCapacityTextView.setText(String.format("%sAmph", calRecBatteryCapacity()));
     }
 
 
     private void calTotalWattAndTotalWattHour() {
         for (SolarCalData solarCalData : solarCalDataList) {
-            totalWatt = totalWatt + (solarCalData.getVoltage() * solarCalData.getAmps());
-            totalWattHour=totalWattHour + (solarCalData.getVoltage() * solarCalData.getAmps()*solarCalData.getHoursUsedDaily());
+            if(solarCalDataList.get(0)!=solarCalData){ // this if statement is done because of the lazy hack done to the adapter first list data
+                totalWatt = totalWatt + (solarCalData.getVoltage() * solarCalData.getAmps());
+                totalWattHour=totalWattHour + (solarCalData.getVoltage() * solarCalData.getAmps()*solarCalData.getHoursUsedDaily());
+            }
         }
     }
 
