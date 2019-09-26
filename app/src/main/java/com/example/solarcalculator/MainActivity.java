@@ -177,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(800, 1400);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(700, 1400);
+        
     }
 
     private void openAccessHourDialog() {
