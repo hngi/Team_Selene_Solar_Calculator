@@ -10,7 +10,7 @@
         android:id="@+id/cal_display_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="8sp">
@@ -66,7 +66,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -104,7 +104,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -141,7 +141,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:padding="8dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
@@ -173,6 +173,7 @@
         android:paddingEnd="48dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/button_background"
+        android:backgroundTint="@color/colorAccent"
         android:layout_below="@id/cal_display_linear_layout_body"
         android:layout_centerHorizontal="true"/>
 
