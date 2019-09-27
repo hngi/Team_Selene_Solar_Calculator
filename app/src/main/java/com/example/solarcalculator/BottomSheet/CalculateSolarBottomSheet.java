@@ -69,9 +69,9 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
 
     private void displaySolarData() {
         calTotalWattAndTotalWattHour();
-        totalWattHourTextView.setText(String.format("%sWh", calTotalWattHour()));
-        recSolarPowerTextView.setText(String.format("%sWatts", calRecSolarPowerNeeded()));
-        recPowerCapacityTextView.setText(String.format("%sAmph", calRecBatteryCapacity()));
+        totalWattHourTextView.setText(String.format("%s WattHrs", calTotalWattHour()));
+        recSolarPowerTextView.setText(String.format("%s Watts", calRecSolarPowerNeeded()));
+        recPowerCapacityTextView.setText(String.format("%s AmpHrs", calRecBatteryCapacity()));
     }
 
 
@@ -79,18 +79,18 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
         for (SolarCalData solarCalData : solarCalDataList) {
             if(solarCalDataList.get(0)!=solarCalData){ // this if statement is done because of the lazy hack done to the adapter first list data
                 totalWatt = totalWatt + (solarCalData.getVoltage() * solarCalData.getAmps());
-                totalWattHour=totalWattHour + (solarCalData.getVoltage() * solarCalData.getAmps()*solarCalData.getHoursUsedDaily());
+                totalWattHour=totalWattHour + (solarCalData.getVoltage() * solarCalData.getAmps()*solarCalData.getHoursUsedDaily()*solarCalData.getQuantity());
             }
         }
     }
 
     private String calRecBatteryCapacity() {
-        return String.valueOf(totalWatt / 12);
+        return String.valueOf(totalWattHour / 6);
     }
 
 
     private String calRecSolarPowerNeeded() {
-        return String.valueOf(totalWatt / userSunlightAccessInHours);
+        return String.valueOf(totalWattHour / userSunlightAccessInHours);
     }
 
     private String calTotalWattHour() {
