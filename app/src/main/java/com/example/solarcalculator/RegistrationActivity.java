@@ -30,7 +30,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.register_scroll_view);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
 
@@ -109,7 +109,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             public void run() {
                 hideProgressbar();
                 showToast("Registration Successful");
-                openMainActivity(RegistrationActivity.this,newUser);
+                openLoginActivity(RegistrationActivity.this,newUser);
                 finish();
             }
         },3000);

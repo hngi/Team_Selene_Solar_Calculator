@@ -28,6 +28,11 @@ public class BaseActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    protected void openLoginActivity(Context context, User currentUser){
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(LoginActivity.USER_LOGIN_KEY_INTENT_EXTRA,currentUser);
+    }
+
     protected void openMainActivity(Context context, User currentUser) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(MainActivity.USER_KEY_INTENT_EXTRA,currentUser);

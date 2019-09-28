@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MainActivity extends BaseActivity implements View.OnClickListener, SolarDataAdapter.DataListListener {
     private static final String TAG = "solarcalculator";
     public static final String USER_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
+    public static final String USER_LOGIN_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
 
 
     ArrayList<SolarCalData> solarCalDataList;
