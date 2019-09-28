@@ -103,11 +103,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void getLoggedInUserFromIntentExtra() {
         if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
             currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
-            noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getLastName()));
+            setNoItemText();
             viewModel.setCurrentUser(currentUser);
         }
     }
 
+    private void setNoItemText() {
+        noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getLastName()));
+    }
 
 
     private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
@@ -198,7 +201,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(550, 1000);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(650, 1200);
         
     }
 
@@ -238,7 +241,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(550, 1000);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(650, 1200);
     }
 
     private boolean validateInput(String deviceName, String deviceAmps, String deviceVolts, String deviceHour, String deviceQty) {
@@ -326,6 +329,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_clear_all:
                 int deletedItems = solarDataAdapter.clearAllData();
                 generateFirstDummyDataForList();
+                setNoItemText();
                 if(deletedItems>0){
                     showSnackbar(deletedItems+" item(s) deleted");
                 } else showSnackbar("You have no data to delete");
