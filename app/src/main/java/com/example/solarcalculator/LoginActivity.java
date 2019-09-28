@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "slike.Views.Login";
+    public static final String USER_LOGIN_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
 
     private TextInputLayout emailEditText, passwordEditText;
     private ProgressBar progressBar;
