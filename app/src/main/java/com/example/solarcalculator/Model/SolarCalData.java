@@ -9,10 +9,92 @@ public class SolarCalData implements Parcelable {
     private int amps;
     private int hoursUsedDaily;
     private int quantity;
+    private long userId;
 
     //Constructor
     private SolarCalData(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    //getters & setters
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public int getVoltage() {
+        return voltage;
+    }
+
+    public int getAmps() {
+        return amps;
+    }
+
+    public int getHoursUsedDaily() {
+        return hoursUsedDaily;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public static Builder getBuilder(String deviceName){
+        return new Builder(deviceName);
+    }
+
+    public int getWattage() { return getVoltage()*getAmps(); }
+
+
+    //Builder Class & Methods
+    public static class Builder{
+        private String deviceName;
+        private int voltage;
+        private int amps;
+        private int hoursUsedDaily;
+        private int quantity;
+        private long userId;
+
+        private Builder(String deviceName) {
+            this.deviceName = deviceName;
+        }
+
+        public Builder voltage(int voltage) {
+            this.voltage = voltage;
+            return this;
+        }
+
+        public Builder amps(int amps) {
+            this.amps = amps;
+            return this;
+        }
+
+        public Builder hoursUsedDaily(int hoursUsedDaily) {
+            this.hoursUsedDaily = hoursUsedDaily;
+            return this;
+        }
+
+        public Builder quantity(int userSunlightAccessInHours) {
+            this.quantity = userSunlightAccessInHours;
+            return this;
+        }
+
+        public Builder userId(long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public SolarCalData build(){
+            SolarCalData solarCalData = new SolarCalData(deviceName);
+            solarCalData.amps =amps;
+            solarCalData.voltage=voltage;
+            solarCalData.hoursUsedDaily=hoursUsedDaily;
+            solarCalData.quantity = quantity;
+            solarCalData.userId = userId;
+            return solarCalData;
+        }
     }
 
 
@@ -52,73 +134,4 @@ public class SolarCalData implements Parcelable {
     };
 
 
-    //getters & setters
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public int getVoltage() {
-        return voltage;
-    }
-
-    public int getAmps() {
-        return amps;
-    }
-
-    public int getHoursUsedDaily() {
-        return hoursUsedDaily;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public static Builder getBuilder(String deviceName){
-        return new Builder(deviceName);
-    }
-
-    public int getWattage() { return getVoltage()*getAmps(); }
-
-
-    //Builder Class & Methods
-    public static class Builder{
-        private String deviceName;
-        private int voltage;
-        private int amps;
-        private int hoursUsedDaily;
-        private int quantity;
-
-        private Builder(String deviceName) {
-            this.deviceName = deviceName;
-        }
-
-        public Builder voltage(int voltage) {
-            this.voltage = voltage;
-            return this;
-        }
-
-        public Builder amps(int amps) {
-            this.amps = amps;
-            return this;
-        }
-
-        public Builder hoursUsedDaily(int hoursUsedDaily) {
-            this.hoursUsedDaily = hoursUsedDaily;
-            return this;
-        }
-
-        public Builder quantity(int userSunlightAccessInHours) {
-            this.quantity = userSunlightAccessInHours;
-            return this;
-        }
-
-        public SolarCalData build(){
-            SolarCalData solarCalData = new SolarCalData(deviceName);
-            solarCalData.amps =amps;
-            solarCalData.voltage=voltage;
-            solarCalData.hoursUsedDaily=hoursUsedDaily;
-            solarCalData.quantity = quantity;
-            return solarCalData;
-        }
-    }
 }

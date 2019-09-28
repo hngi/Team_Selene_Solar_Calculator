@@ -13,4 +13,18 @@
     <string name="recommended_battery_capaity">Recommended Battery Capaity</string>
     <string name="please_calculate">Please Calculate</string>
     <string name="clear_all">Clear All</string>
+
+    //Strings for login and register
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="register_btn_text">Register</string>
+    <string name="register_account_login_here">Already have an account? Login</string>
+    <string name="login_btn_text">Login</string>
+    <string name="login_account_register_here">Don\'t have an account? Register here</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="edit_account">Edit Account</string>
+    <string name="welcome_you_re_logged_in">Welcome! You\'re Logged In</string>
 </resources>
