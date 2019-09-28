@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.solarcalculator.Model.User;
 import com.example.solarcalculator.R;
+import com.example.solarcalculator.viewmodel.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -20,8 +22,9 @@ import androidx.annotation.Nullable;
 import com.example.solarcalculator.Model.SolarCalData;
 
 public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
-    public static final String NEW_INSTANCE_LIST_KEY = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_LIST_KEY";
-    public static final String NEW_INSTANCE_SUNLIGHT_ACCESS_KEY = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_SUNLIGHT_ACCESS_KEY";
+    private static final String NEW_INSTANCE_LIST_KEY = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_LIST_KEY";
+    private static final String NEW_INSTANCE_SUNLIGHT_ACCESS_KEY = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_SUNLIGHT_ACCESS_KEY";
+    private static final String NEW_INSTANCE_CURRENT_USER = "com.example.solarcalculator.BottomSheet_NEW_INSTANCE_CURRENT_USER";
 
     private List<SolarCalData> solarCalDataList;
     private int userSunlightAccessInHours;
@@ -31,12 +34,19 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
     private TextView totalWattHourTextView;
     private TextView recSolarPowerTextView;
     private TextView recPowerCapacityTextView;
+    private TextView titleTextView;
+    private TextView calcDisplayTextView;
 
-    public static CalculateSolarBottomSheet newInstance(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours) {
+    private UserViewModel viewModel;
+    private User currentUser;
+
+
+    public static CalculateSolarBottomSheet newInstance(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours, User currentUser) {
         CalculateSolarBottomSheet bottomSheet = new CalculateSolarBottomSheet();
         Bundle args = new Bundle();
         args.putParcelableArrayList(NEW_INSTANCE_LIST_KEY, (ArrayList<? extends Parcelable>) solarCalDataList);
         args.putInt(NEW_INSTANCE_SUNLIGHT_ACCESS_KEY, userSunlightAccessInHours);
+        args.putParcelable(NEW_INSTANCE_CURRENT_USER, currentUser);
         bottomSheet.setArguments(args);
         return bottomSheet;
     }
@@ -49,11 +59,14 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
         totalWattHourTextView = rootview.findViewById(R.id.cal_display_total_watt);
         recSolarPowerTextView = rootview.findViewById(R.id.cal_display_rec_solar_power);
         recPowerCapacityTextView = rootview.findViewById(R.id.cal_rec_battery_capacity);
+        titleTextView = rootview.findViewById(R.id.cal_display_title_textview);
+        calcDisplayTextView = rootview.findViewById(R.id.cal_display_textview);
         Button dismissBtn = rootview.findViewById(R.id.cal_display_dismiss_btn);
 
         if (getArguments() != null) {
             solarCalDataList = getArguments().getParcelableArrayList(NEW_INSTANCE_LIST_KEY);
             userSunlightAccessInHours = getArguments().getInt(NEW_INSTANCE_SUNLIGHT_ACCESS_KEY);
+            currentUser = getArguments().getParcelable(NEW_INSTANCE_CURRENT_USER);
             displaySolarData();
         }
 
@@ -72,6 +85,9 @@ public class CalculateSolarBottomSheet extends BottomSheetDialogFragment {
         totalWattHourTextView.setText(String.format("%s WattHrs", calTotalWattHour()));
         recSolarPowerTextView.setText(String.format("%s Watts", calRecSolarPowerNeeded()));
         recPowerCapacityTextView.setText(String.format("%s AmpHrs", calRecBatteryCapacity()));
+
+        calcDisplayTextView.setText(String.format("%s %s", currentUser.getFirstName(), currentUser.getLastName()));
+        titleTextView.setText(getString(R.string.your_solar_cal_text));
     }
 
 

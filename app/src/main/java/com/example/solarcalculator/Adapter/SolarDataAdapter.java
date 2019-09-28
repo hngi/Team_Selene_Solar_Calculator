@@ -62,6 +62,9 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
         ViewModel is a newer better alternative too*/
         if(dataList.size()>1){
             listListener.showFab();
+            if(dataList.size()==2){
+                listListener.listHasOneItem();
+            }
         } else {
             listListener.hideFab();
         }
@@ -140,6 +143,7 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
     public interface DataListListener{
         void showFab();
         void hideFab();
+        void listHasOneItem();
     }
 
     public void setOnDataListListener(DataListListener listListener){

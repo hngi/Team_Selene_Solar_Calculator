@@ -91,8 +91,8 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
         if(insertedUserId!=null&&insertedUserId!=-1&&!isNowRegistered){
             isNowRegistered=true;
-            getSharePref().setLoggedUserId(insertedUserId);
-            Log.d(TAG, "register: SharedPref LoggedIn UserId "+getSharePref().getLoggedUserId());
+            //getSharePref().setLoggedUserId(insertedUserId);
+            //Log.d(TAG, "register: SharedPref LoggedIn UserId "+getSharePref().getLoggedUserId());
             openHandler(newUser);
         } else if(isNowRegistered){
             showToast("Registering Please wait");
@@ -109,10 +109,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             public void run() {
                 hideProgressbar();
                 showToast("Registration Successful");
-                openMainActivity(RegistrationActivity.this,newUser);
+                gotoLoginActivity(RegistrationActivity.this);
                 finish();
             }
-        },3000);
+        },2000);
     }
 
 

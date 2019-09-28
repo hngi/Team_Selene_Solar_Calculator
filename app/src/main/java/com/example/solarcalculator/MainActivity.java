@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         initViews();
 
-        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
     }
 
@@ -95,6 +94,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         calculateFab.setOnClickListener(this);
 
         handler = new Handler();
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         getLoggedInUserFromIntentExtra();
         generateFirstDummyDataForList();
@@ -103,14 +103,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void getLoggedInUserFromIntentExtra() {
         if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
             currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
-            noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getFirstName()));
+            noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getLastName()));
+            viewModel.setCurrentUser(currentUser);
         }
     }
 
 
 
     private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
-        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours);
+        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours,currentUser);
         bottomSheet.setCancelable(false);
         bottomSheet.show(getSupportFragmentManager(),null);
     }
@@ -197,7 +198,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(700, 1400);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(550, 1000);
         
     }
 
@@ -237,7 +238,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(700, 1400);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(550, 1000);
     }
 
     private boolean validateInput(String deviceName, String deviceAmps, String deviceVolts, String deviceHour, String deviceQty) {
@@ -305,6 +306,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void hideFab() {
         calculateFab.hide();
         noInputTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void listHasOneItem() {
+        noInputTextView.setVisibility(View.VISIBLE);
+        noInputTextView.setText(getString(R.string.use_green_icon_text));
     }
 
     @Override
