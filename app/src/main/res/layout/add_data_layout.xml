@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background"
-    android:backgroundTint="@color/gray"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:padding="20dp">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/addfile_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/sun"
+        android:layout_margin="4dp"/>
 
     <TextView
         android:id="@+id/addfile_textView"
@@ -15,10 +27,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_below="@id/addfile_logo"
         android:fontFamily="@font/oensansbold"
         android:text="Add Appliance"
         android:textAlignment="center"
-        android:textSize="25sp"
+        android:textSize="22sp"
+        android:textColor="@android:color/white"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -26,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/addfile_textView"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -116,3 +130,4 @@
         android:visibility="gone" />
 </RelativeLayout>
 
+</androidx.core.widget.NestedScrollView>

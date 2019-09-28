@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         initViews();
 
-        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
     }
 
@@ -96,6 +95,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         calculateFab.setOnClickListener(this);
 
         handler = new Handler();
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
         getLoggedInUserFromIntentExtra();
         generateFirstDummyDataForList();
@@ -104,14 +104,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void getLoggedInUserFromIntentExtra() {
         if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
             currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
-            noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getFirstName()));
+            setNoItemText();
+            viewModel.setCurrentUser(currentUser);
         }
     }
 
+    private void setNoItemText() {
+        noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getLastName()));
+    }
 
 
     private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
-        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours);
+        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours,currentUser);
         bottomSheet.setCancelable(false);
         bottomSheet.show(getSupportFragmentManager(),null);
     }
@@ -198,7 +202,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(700, 1400);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(650, 1200);
+        
 
     }
 
@@ -238,7 +243,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         dialog.show();
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Objects.requireNonNull(dialog.getWindow()).setLayout(700, 1400);
+        Objects.requireNonNull(dialog.getWindow()).setLayout(650, 1200);
     }
 
     private boolean validateInput(String deviceName, String deviceAmps, String deviceVolts, String deviceHour, String deviceQty) {
@@ -309,6 +314,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
+    public void listHasOneItem() {
+        noInputTextView.setVisibility(View.VISIBLE);
+        noInputTextView.setText(getString(R.string.use_green_icon_text));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
         return super.onCreateOptionsMenu(menu);
@@ -320,6 +331,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_clear_all:
                 int deletedItems = solarDataAdapter.clearAllData();
                 generateFirstDummyDataForList();
+                setNoItemText();
                 if(deletedItems>0){
                     showSnackbar(deletedItems+" item(s) deleted");
                 } else showSnackbar("You have no data to delete");
