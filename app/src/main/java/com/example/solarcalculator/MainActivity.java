@@ -1,5 +1,5 @@
 package com.example.solarcalculator;
-import android.content.Context;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,32 +11,36 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
 import com.example.solarcalculator.Adapter.SolarDataAdapter;
-import com.example.solarcalculator.Utils.SharedPref;
+import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
+import com.example.solarcalculator.Model.SolarCalData;
+import com.example.solarcalculator.Model.User;
+import com.example.solarcalculator.viewmodel.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.example.solarcalculator.Model.SolarCalData;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SolarDataAdapter.DataListListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, SolarDataAdapter.DataListListener {
     private static final String TAG = "solarcalculator";
+    public static final String USER_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
+
+
     ArrayList<SolarCalData> solarCalDataList;
     private SolarDataAdapter solarDataAdapter;
-    private SharedPref sharedPref;
 
     //AddFile Dialog Views
     private TextInputEditText deviceNameEditText;
@@ -48,11 +52,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler handler;
 
     private FloatingActionButton calculateFab;
+    private TextView noInputTextView;
 
     boolean addFileDialogCalledFromFab;
 
     private SolarCalData dataToEdit;
     private int dataToEditPosition;
+
+    private UserViewModel viewModel;
+    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initViews();
 
-
+        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
     }
 
@@ -73,11 +82,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         solarDataAdapter = new SolarDataAdapter(solarCalDataList, this);
         solarDataAdapter.setOnDataListListener(this);
 
+        noInputTextView = findViewById(R.id.main_activity_no_input_text);
+
         RecyclerView recyclerView = findViewById(R.id.main_activity_recyclerview);
         recyclerView.setAdapter(solarDataAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        sharedPref = new SharedPref(getSharedPreferences("SunHour", Context.MODE_PRIVATE));
 
         FloatingActionButton addFab = findViewById(R.id.main_activity_add_fab);
         calculateFab = findViewById(R.id.main_activity_calculate_fab);
@@ -85,7 +95,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         calculateFab.setOnClickListener(this);
 
         handler = new Handler();
+
+        getLoggedInUserFromIntentExtra();
         generateFirstDummyDataForList();
+    }
+
+    private void getLoggedInUserFromIntentExtra() {
+        if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
+            currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
+            noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getFirstName()));
+        }
     }
 
 
@@ -155,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .voltage(Integer.parseInt(deviceVolts))
                         .hoursUsedDaily(Integer.parseInt(deviceHours))
                         .quantity(Integer.parseInt(deviceQty))
+                        .userId(currentUser.getId())
                         .build();
                 if(addFileDialogCalledFromFab){
                     solarDataAdapter.addData(data);
@@ -191,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(10);
-        numberPicker.setValue(sharedPref.getLastSunAccessInHour());
+        numberPicker.setValue(getSharePref().getLastSunAccessInHour());
         numberPicker.clearFocus();
 
         builder.setView(view);
@@ -201,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 showProgressbar();
-                sharedPref.setLastSunAccess(numberPicker.getValue());
+                getSharePref().setLastSunAccess(numberPicker.getValue());
 
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -269,7 +289,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void generateFirstDummyDataForList() {
-        SolarCalData data = SolarCalData.getBuilder("Dummy").amps(200).voltage(200).hoursUsedDaily(2).quantity(2).build();
+        SolarCalData data = SolarCalData.getBuilder("Dummy")
+                .amps(200).voltage(200).hoursUsedDaily(2).quantity(2).userId(currentUser.getId()).build();
         solarCalDataList.add(data);
     }
 
@@ -277,11 +298,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void showFab() {
         calculateFab.show();
+        noInputTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void hideFab() {
         calculateFab.hide();
+        noInputTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -292,13 +315,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.menu_action_clear_all){
-            int deletedItems = solarDataAdapter.clearAllData();
-            generateFirstDummyDataForList();
-            showSnackbar(deletedItems+" item(s) deleted");
-            return true;
-        } else
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.main_menu_clear_all:
+                int deletedItems = solarDataAdapter.clearAllData();
+                generateFirstDummyDataForList();
+                if(deletedItems>0){
+                    showSnackbar(deletedItems+" item(s) deleted");
+                } else showSnackbar("You have no data to delete");
+                return true;
+            case R.id.main_menu_logout:
+                logout();
+                return true;
+            case R.id.main_menu_delete_account:
+                deleteAccount();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     @Override
@@ -318,4 +352,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onContextItemSelected(item);
     }
+
+    private void deleteAccount() {
+        viewModel.deleteUser(currentUser);
+        showToast("Account Deleted Successfully");
+        logout();
+    }
+
+    private void logout() {
+        getSharePref().setLoggedUserId((long) -1);
+        gotoLoginActivity(MainActivity.this);
+        finish();
+    }
+
 }
