@@ -12,5 +12,8 @@
     <item
         android:id="@+id/main_menu_delete_account"
         android:title="@string/delete_account"/>
+    <item
+        android:id="@+id/about_the_team"
+        android:title="@string/about_the_team"/>
 
 </menu>

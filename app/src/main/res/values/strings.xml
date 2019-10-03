@@ -29,4 +29,5 @@
     <string name="welcome_you_re_logged_in">Welcome! You\'re Logged In</string>
     <string name="your_solar_cal_text">Your Solar Calculations</string>
     <string name="use_green_icon_text">New item added, you can use the green icon to see calculations</string>
+    <string name="about_the_team">About the Team</string>
 </resources>
