@@ -374,7 +374,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_delete_account:
                 deleteAccount();
                 return true;
-            case R.id.about_the_team:
+            case R.id.Team_page:
                 openActivity();
                 return true;
             default:
