@@ -32,4 +32,5 @@
 
     //Google server ID
     <string name="server_client_id">917856944725-2s4js663b44elc92e1aof2n8suf0r7hp.apps.googleusercontent.com</string>
+    <string name="about_the_team">About the Team</string>
 </resources>

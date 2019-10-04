@@ -374,11 +374,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_delete_account:
                 deleteAccount();
                 return true;
+            case R.id.about_the_team:
+                openActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
+    private void openActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
