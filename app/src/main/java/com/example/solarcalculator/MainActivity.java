@@ -1,5 +1,6 @@
 package com.example.solarcalculator;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MainActivity extends BaseActivity implements View.OnClickListener, SolarDataAdapter.DataListListener {
     private static final String TAG = "solarcalculator";
     public static final String USER_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
+    public static final String USER_LOGIN_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
 
 
     private SolarDataAdapter solarDataAdapter;
@@ -228,6 +230,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Objects.requireNonNull(dialog.getWindow()).setLayout(650, 1200);
         
+
     }
 
     private void openAccessHourDialog() {
@@ -358,11 +361,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_delete_account:
                 deleteAccount();
                 return true;
+            case R.id.about_the_team:
+                openActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
     }
+
+    private void openActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {

@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 
     //Added By Ehma, New Dependencies
     // ViewModel and LiveData
@@ -54,7 +55,6 @@ dependencies {
     //Rx Java & Rx Android
     //implementation "io.reactivex.rxjava3:rxjava:3.0.0-RC1"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
 
 
 }
