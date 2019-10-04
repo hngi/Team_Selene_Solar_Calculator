@@ -3,7 +3,15 @@ package com.example.solarcalculator.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Objects;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class SolarCalData implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
     private final String deviceName;
     private int voltage;
     private int amps;
@@ -11,12 +19,21 @@ public class SolarCalData implements Parcelable {
     private int quantity;
     private long userId;
 
+
     //Constructor
-    private SolarCalData(String deviceName) {
+    public SolarCalData(String deviceName) {
         this.deviceName = deviceName;
     }
 
     //getters & setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getDeviceName() {
         return deviceName;
     }
@@ -25,20 +42,40 @@ public class SolarCalData implements Parcelable {
         return voltage;
     }
 
+    public void setVoltage(int voltage) {
+        this.voltage = voltage;
+    }
+
     public int getAmps() {
         return amps;
+    }
+
+    public void setAmps(int amps) {
+        this.amps = amps;
     }
 
     public int getHoursUsedDaily() {
         return hoursUsedDaily;
     }
 
+    public void setHoursUsedDaily(int hoursUsedDaily) {
+        this.hoursUsedDaily = hoursUsedDaily;
+    }
+
     public int getQuantity() {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public long getUserId() {
         return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public static Builder getBuilder(String deviceName){
@@ -133,5 +170,17 @@ public class SolarCalData implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SolarCalData)) return false;
+        SolarCalData that = (SolarCalData) o;
+        return getUserId() == that.getUserId() &&
+                getId().equals(that.getId());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUserId());
+    }
 }
