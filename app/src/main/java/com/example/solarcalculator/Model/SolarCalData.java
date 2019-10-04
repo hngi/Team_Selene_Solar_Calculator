@@ -56,6 +56,7 @@ public class SolarCalData implements Parcelable {
         private int hoursUsedDaily;
         private int quantity;
         private long userId;
+        private int RC_SIGN_IN = 0;
 
         private Builder(String deviceName) {
             this.deviceName = deviceName;
@@ -81,6 +82,10 @@ public class SolarCalData implements Parcelable {
             return this;
         }
 
+        public Builder googleID(int userId){
+            this.userId = userId;
+            return this;
+        }
         public Builder userId(long userId) {
             this.userId = userId;
             return this;
