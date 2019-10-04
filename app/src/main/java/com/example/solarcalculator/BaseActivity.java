@@ -46,7 +46,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void gotoLoginActivity(Context context) {
         startActivity(new Intent(context, LoginActivity.class));
     }
-
+//    protected void gotoGoogleSignInActivity(Context context) {
+//        startActivity(new Intent(context, GoogleSignInActivity.class));
+//    }
 
 
 
