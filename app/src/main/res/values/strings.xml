@@ -29,6 +29,10 @@
     <string name="welcome_you_re_logged_in">Welcome! You\'re Logged In</string>
     <string name="your_solar_cal_text">Your Solar Calculations</string>
     <string name="use_green_icon_text">New item added, you can use the green icon to see calculations</string>
+
+    //Google server ID
+    <string name="server_client_id">917856944725-2s4js663b44elc92e1aof2n8suf0r7hp.apps.googleusercontent.com</string>
 <!--    <string name="about_the_team">About the Team</string>-->
     <string name="about_the_team">About the Team</string>
+    <string name="or">OR</string>
 </resources>

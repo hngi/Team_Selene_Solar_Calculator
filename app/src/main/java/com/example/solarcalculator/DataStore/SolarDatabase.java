@@ -8,7 +8,7 @@ import com.example.solarcalculator.Model.User;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@androidx.room.Database(entities = {User.class, SolarCalData.class},version = 2,exportSchema = false)
+@androidx.room.Database(entities = {User.class, SolarCalData.class},version = 3,exportSchema = false)
 public abstract class SolarDatabase extends RoomDatabase {
     private static SolarDatabase INSTANCE;
 

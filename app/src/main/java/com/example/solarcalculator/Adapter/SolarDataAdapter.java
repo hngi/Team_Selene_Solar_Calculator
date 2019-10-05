@@ -113,7 +113,7 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
     //Method created because of first position hack
     private SolarCalData generateFirstDummyDataForList() {
         return SolarCalData.getBuilder("Dummy")
-                .amps(200).voltage(200).hoursUsedDaily(2).quantity(2).userId(-1).build();
+                .amps(200).voltage(200).hoursUsedDaily(2).quantity(2).roomUserId((long) -1).build();
     }
 
 

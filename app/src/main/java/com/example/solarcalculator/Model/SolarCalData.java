@@ -17,7 +17,8 @@ public class SolarCalData implements Parcelable {
     private int amps;
     private int hoursUsedDaily;
     private int quantity;
-    private long userId;
+    private long roomUserId;
+    private String googleUserId;
 
 
     //Constructor
@@ -70,12 +71,20 @@ public class SolarCalData implements Parcelable {
         this.quantity = quantity;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getRoomUserId() {
+        return roomUserId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setRoomUserId(long roomUserId) {
+        this.roomUserId = roomUserId;
+    }
+
+    public String getGoogleUserId() {
+        return googleUserId;
+    }
+
+    public void setGoogleUserId(String googleUserId) {
+        this.googleUserId = googleUserId;
     }
 
     public static Builder getBuilder(String deviceName){
@@ -92,7 +101,8 @@ public class SolarCalData implements Parcelable {
         private int amps;
         private int hoursUsedDaily;
         private int quantity;
-        private long userId;
+        private Long roomUserId;
+        private String googleUserId;
 
         private Builder(String deviceName) {
             this.deviceName = deviceName;
@@ -118,8 +128,17 @@ public class SolarCalData implements Parcelable {
             return this;
         }
 
-        public Builder userId(long userId) {
-            this.userId = userId;
+        public Builder googleID(Long userId){
+            this.roomUserId = userId;
+            return this;
+        }
+        public Builder roomUserId(Long roomUserId) {
+            this.roomUserId = roomUserId;
+            return this;
+        }
+
+        public Builder googleUserId(String googleUserId) {
+            this.googleUserId = googleUserId;
             return this;
         }
 
@@ -129,7 +148,8 @@ public class SolarCalData implements Parcelable {
             solarCalData.voltage=voltage;
             solarCalData.hoursUsedDaily=hoursUsedDaily;
             solarCalData.quantity = quantity;
-            solarCalData.userId = userId;
+            solarCalData.roomUserId = roomUserId;
+            solarCalData.googleUserId=googleUserId;
             return solarCalData;
         }
     }
@@ -175,12 +195,12 @@ public class SolarCalData implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof SolarCalData)) return false;
         SolarCalData that = (SolarCalData) o;
-        return getUserId() == that.getUserId() &&
+        return getRoomUserId() == that.getRoomUserId() &&
                 getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUserId());
+        return Objects.hash(getId(), getRoomUserId());
     }
 }

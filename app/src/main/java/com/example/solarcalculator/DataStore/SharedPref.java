@@ -12,6 +12,7 @@ public class SharedPref {
 
     public static synchronized SharedPref getINSTANCE(Context context) {
         if(INSTANCE==null){
+            //noinspection deprecation
             INSTANCE = new SharedPref(PreferenceManager.getDefaultSharedPreferences(context));
         }
         return INSTANCE;
@@ -42,6 +43,10 @@ public class SharedPref {
 
     public Long getLoggedUserId(){
         return sharedPreferences.getLong(ID_KEY,-1);
+    }
+
+    public void getLoginUserMethod(){
+
     }
 
 

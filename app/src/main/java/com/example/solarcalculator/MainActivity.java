@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.solarcalculator.Adapter.SolarDataAdapter;
 import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
@@ -20,6 +21,12 @@ import com.example.solarcalculator.Model.SolarCalData;
 import com.example.solarcalculator.Model.User;
 import com.example.solarcalculator.viewmodel.DataViewModel;
 import com.example.solarcalculator.viewmodel.UserViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -41,7 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private static final String TAG = "solarcalculator";
     public static final String USER_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
     public static final String USER_LOGIN_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
-
+    public static final int RC_SIGN_IN = 0;
 
     private SolarDataAdapter solarDataAdapter;
     private List<SolarCalData> dataList;
@@ -63,9 +70,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private SolarCalData dataToEdit;
 
+    private DataViewModel dataViewModel;
     private UserViewModel userViewModel;
     private User currentUser;
-    private DataViewModel dataViewModel;
+
+    GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInAccount googleSignInAccount;
+    private String googlePersonId;
+    private String personGivenName;
+    private String personGivenName1;
 
 
     @Override
@@ -77,7 +90,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
         initViews();
-
 
     }
 
@@ -101,18 +113,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         addFab.setOnClickListener(this);
         calculateFab.setOnClickListener(this);
 
-        getLoggedInUserFromIntentExtra();
-        populateData();
+
+        getLoggedInUser();
+        populateRecyclerviewWithData();
+
     }
 
-    private void populateData() {
+    private void populateRecyclerviewWithData() {
         dataViewModel.getAllData().observe(this, new Observer<List<SolarCalData>>() {
             @Override
             public void onChanged(List<SolarCalData> solarCalDataList) {
                 dataList.clear();
                 for(SolarCalData data:solarCalDataList){
-                    if(data.getUserId()==currentUser.getId()){
-                        dataList.add(data);
+                    if(googleSignInAccount!=null){
+                        if(data.getGoogleUserId().equals(googlePersonId)){
+                            dataList.add(data);
+                        }
+                    }else {
+                        if(data.getRoomUserId()== currentUser.getId()) {
+                            dataList.add(data);
+                        }
                     }
                 }
                 solarDataAdapter.summitList(dataList);
@@ -120,11 +140,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-    private void getLoggedInUserFromIntentExtra() {
+    private void getLoggedInUser() {
         if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
             currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
             setNoItemText();
-            userViewModel.setCurrentUser(currentUser);
+        } else{
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+            setNoItemTextForGoogle();
         }
     }
 
@@ -132,9 +159,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         noInputTextView.setText(String.format("Hello %s %s\nplease click the + icon to begin your solar calculation", currentUser.getFirstName(), currentUser.getLastName()));
     }
 
+    private void setNoItemTextForGoogle() {
+        String googlePersonName = googleSignInAccount.getDisplayName();
+        String personGivenName = googleSignInAccount.getGivenName();
+        String personFamilyName = googleSignInAccount.getFamilyName();
+        String personEmail = googleSignInAccount.getEmail();
+        googlePersonId = googleSignInAccount.getId();
+
+        currentUser.setFirstName(personGivenName);
+        currentUser.setLastName(personFamilyName);
+        currentUser.setEmail(personEmail);
+        setNoItemText();
+    }
+
 
     private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
-        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours,currentUser);
+        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours, currentUser);
         bottomSheet.setCancelable(false);
         bottomSheet.show(getSupportFragmentManager(),null);
     }
@@ -153,7 +193,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void openAddFileDialog() {
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
         View view=View.inflate(this,R.layout.add_data_layout,null);
 
         deviceNameEditText = view.findViewById(R.id.addfile_device_name_editText);
@@ -193,13 +233,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     hideProgressbar();
                     return;
                 }
-                SolarCalData data = SolarCalData.getBuilder(deviceName)
+
+
+                SolarCalData.Builder builderData = SolarCalData.getBuilder(deviceName)
                         .amps(Integer.parseInt(deviceAmps))
                         .voltage(Integer.parseInt(deviceVolts))
                         .hoursUsedDaily(Integer.parseInt(deviceHours))
-                        .quantity(Integer.parseInt(deviceQty))
-                        .userId(currentUser.getId())
-                        .build();
+                        .quantity(Integer.parseInt(deviceQty));
+
+
+                if(googleSignInAccount !=null){
+                    builderData.googleUserId(googlePersonId);
+                    builderData.roomUserId(null);
+                } else{
+                    builderData.roomUserId(currentUser.getId());
+                    builderData.googleUserId(null);
+                }
+
+                SolarCalData data=builderData.build();
 
                 String msg = "";
                 if(addFileDialogCalledFromFab){
@@ -395,16 +446,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void deleteAccount() {
         //TODO should have a confirmation dialog
-        solarDataAdapter.clearAllData(currentUser.getId());
-        userViewModel.deleteUser(currentUser);
-        showToast("Account Deleted Successfully");
-        logout();
+        if(mGoogleSignInClient!=null){
+            //TODO should be handld by Etim
+            finish();
+        } else{
+            solarDataAdapter.clearAllData(currentUser.getId());
+            userViewModel.deleteUser(currentUser);
+            showToast("Account Deleted Successfully");
+            logout();
+        }
     }
 
     private void logout() {
-        getSharePref().setLoggedUserId((long) -1);
-        gotoLoginActivity(MainActivity.this);
-        finish();
+        if(getSharePref().getLoggedUserId()!=-1){
+            getSharePref().setLoggedUserId((long) -1);
+            gotoLoginActivity(MainActivity.this);
+            finish();
+        }
+        if(mGoogleSignInClient!=null){
+            signOut();
+        }
+
+
+    }
+
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(MainActivity.this,"Successfully signed out",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                });
     }
 
 }

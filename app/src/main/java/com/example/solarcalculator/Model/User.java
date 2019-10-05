@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class User implements Parcelable {
     @PrimaryKey(autoGenerate = true)
-    private Long id;
+    private Long id ;
     private String firstName;
     private String lastName;
     private String email;

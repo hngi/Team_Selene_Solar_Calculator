@@ -1,5 +1,6 @@
 package com.example.solarcalculator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -9,10 +10,19 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.solarcalculator.Model.User;
+import com.example.solarcalculator.Utils.Common;
 import com.example.solarcalculator.viewmodel.UserViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -25,6 +35,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private UserViewModel viewModel;
     private Handler handler;
     boolean isNowLoggedIn;
+    int RC_SIGN_IN = 0;
+    GoogleSignInButton googleSignInButton;
+    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,30 +48,40 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         initViews();
 
-
         UserViewModel viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-        if (getSharePref().getLoggedUserId() != -1) {
-            for (User looggedUser : viewModel.getallUsers()) {
-                if(looggedUser.getId().equals(getSharePref().getLoggedUserId())) {
-                    openMainActivity(LoginActivity.this,looggedUser);
-                    finish();
-                }
-            }
-        }
 
+        googleSignInButton = findViewById(R.id.google_signIn_btn);
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
 
     }
+
 
     private void initViews() {
         emailEditText = findViewById(R.id.login_activity_email_TextInputLayout);
         passwordEditText = findViewById(R.id.login_activity_password_TextInputLayout);
         TextView registerHere = findViewById(R.id.login_activity_register_text);
         Button loginbtn = findViewById(R.id.login_activity_button);
-
+        GoogleSignInButton signInButton = findViewById(R.id.google_signIn_btn);
 
         registerHere.setOnClickListener(this);
         loginbtn.setOnClickListener(this);
+        signInButton.setOnClickListener(this);
+
 
         progressBar = findViewById(R.id.login_activity_progressbar);
         handler = new Handler();
@@ -67,11 +90,70 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
+    private void signIn() {
+        if(!Common.checkNetwork(this)){
+            showToast("You do not have internet connection, Check internet or log in with email");
+            return;
+        }
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+        showProgressbar();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("Google Sign In Error", "signInResult:failed code=" + e.getStatusCode());
+            Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_LONG).show();
+            hideProgressbar();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null){
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        } else if (getSharePref().getLoggedUserId() != -1) {
+            for (User looggedUser : viewModel.getallUsers()) {
+                if(looggedUser.getId().equals(getSharePref().getLoggedUserId())) {
+                    openMainActivity(LoginActivity.this,looggedUser);
+                    finish();
+                }
+            }
+        }
+
+        super.onStart();
+    }
+
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_activity_button:
-                login();
+                loginViaRoom();
                 break;
             case R.id.login_activity_register_text:
                 gotoRegisterActivity(LoginActivity.this);
@@ -80,7 +162,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
-    private void login() {
+    private void loginViaRoom() {
         showProgressbar();
         String email = emailEditText.getEditText().getText().toString().trim();
         String password = passwordEditText.getEditText().getText().toString().trim();

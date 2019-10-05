@@ -24,7 +24,7 @@ public interface DataDao {
     @Delete
     void deleteData(SolarCalData data);
 
-    @Query("DELETE FROM solarcaldata WHERE userId=:userId")
+    @Query("DELETE FROM solarcaldata WHERE roomUserId=:userId")
     void deleteAllData(long userId);
 
     @Query("SELECT * FROM solarcaldata")
