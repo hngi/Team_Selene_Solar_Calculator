@@ -36,4 +36,8 @@
     <string name="about_the_team">About the Team</string>
     <string name="or">OR</string>
     <string name="welcome">Welcome</string>
+
+    <string name="first_notif_line">1. Device name is simply the name of your device.</string>
+    <string name="second_notif_line">2. Device volts and amphere are the units used to measure the amount of electromotive force and current that can power your device respectively; both the volts and amps can be seen below or beside the stamp of your device.</string>
+    <string name="tips">TIPS!</string>
 </resources>
