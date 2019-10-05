@@ -115,11 +115,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
         getLoggedInUser();
-        populateRecyclerviewWithData();
+        populateRecyclerViewWithData();
 
     }
 
-    private void populateRecyclerviewWithData() {
+    private void populateRecyclerViewWithData() {
         dataViewModel.getAllData().observe(this, new Observer<List<SolarCalData>>() {
             @Override
             public void onChanged(List<SolarCalData> solarCalDataList) {
@@ -166,9 +166,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String personEmail = googleSignInAccount.getEmail();
         googlePersonId = googleSignInAccount.getId();
 
-        currentUser.setFirstName(personGivenName);
-        currentUser.setLastName(personFamilyName);
-        currentUser.setEmail(personEmail);
+        currentUser=new User(personGivenName,personFamilyName,personEmail);
         setNoItemText();
     }
 
@@ -244,7 +242,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 if(googleSignInAccount !=null){
                     builderData.googleUserId(googlePersonId);
-                    builderData.roomUserId(null);
+                    builderData.roomUserId((long) -1);
                 } else{
                     builderData.roomUserId(currentUser.getId());
                     builderData.googleUserId(null);

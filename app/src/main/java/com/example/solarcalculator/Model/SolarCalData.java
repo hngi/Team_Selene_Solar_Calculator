@@ -128,10 +128,6 @@ public class SolarCalData implements Parcelable {
             return this;
         }
 
-        public Builder googleID(Long userId){
-            this.roomUserId = userId;
-            return this;
-        }
         public Builder roomUserId(Long roomUserId) {
             this.roomUserId = roomUserId;
             return this;
@@ -149,7 +145,7 @@ public class SolarCalData implements Parcelable {
             solarCalData.hoursUsedDaily=hoursUsedDaily;
             solarCalData.quantity = quantity;
             solarCalData.roomUserId = roomUserId;
-            solarCalData.googleUserId=googleUserId;
+            solarCalData.googleUserId=googleUserId ;
             return solarCalData;
         }
     }

@@ -49,6 +49,8 @@
             android:textStyle="italic"
             android:layout_margin="80dp"
             android:visibility="visible"/>
+
+
     </RelativeLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/main_activity_calculate_fab"
