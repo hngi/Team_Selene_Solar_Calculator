@@ -1,15 +1,21 @@
 package com.example.solarcalculator;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -81,6 +87,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String personGivenName1;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +120,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         addFab.setOnClickListener(this);
         calculateFab.setOnClickListener(this);
 
-
+        showCustomDialog();
         getLoggedInUser();
         populateRecyclerViewWithData();
 
@@ -467,6 +474,74 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 
     }
+
+    private void showCustomDialog() {
+        //before inflating the custom alert dialog layout, we will get the current activity viewgroup
+        ViewGroup viewGroup = findViewById(android.R.id.content);
+        //then we will inflate the custom alert dialog xml that we created
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.activity_alert_dialog, viewGroup, false);
+
+        //Now we need an AlertDialog.Builder object
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //setting the view of the builder to our custom view that we already inflated
+        CheckBox checkBox = dialogView.findViewById(R.id.checkbox_id);
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        //finally creating the alert dialog and displaying it
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(compoundButton.isChecked()){
+                    storeDialogStatus(true);
+                }else{
+                    storeDialogStatus(false);
+                }
+            }
+        });
+
+        if(getDialogStatus()){
+            alertDialog.hide();
+        }else{
+            alertDialog.show();
+        }
+
+
+
+    }
+
+    private void storeDialogStatus(boolean isChecked){
+        SharedPreferences mSharedPreferences = getSharedPreferences("CheckItem", MODE_PRIVATE);
+        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+        mEditor.putBoolean("item", isChecked);
+        mEditor.apply();
+    }
+
+    private boolean getDialogStatus(){
+        SharedPreferences mSharedPreferences = getSharedPreferences("CheckItem", MODE_PRIVATE);
+        return mSharedPreferences.getBoolean("item", false);
+    }
+
+
+//    SharedPreferences pref = getPreferences(MODE_PRIVATE);
+//    SharedPreferences.Editor editor;
+//    String decision = pref.getString("decision", "NOT checked");
+//    String checkBoxResult = "NOT checked";
+//                if (checkBox.isChecked()) {
+//        checkBoxResult = " checked";
+//        dialogInterface.dismiss();
+//    }
+//    editor = pref.edit();
+//                editor.putString("decision", checkBoxResult);
+//                editor.commit();
+//                return;
+
 
     private void signOut() {
         mGoogleSignInClient.signOut()
