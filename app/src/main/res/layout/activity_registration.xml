@@ -127,14 +127,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
-            <com.shobhitpuri.custombuttons.GoogleSignInButton
-                android:id="@+id/google_signIn_btn"
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/google_sign_in"
-                app:isDarkTheme="true" />
-
             <TextView
                 android:id="@+id/registration_activity_login_text"
                 android:layout_width="wrap_content"

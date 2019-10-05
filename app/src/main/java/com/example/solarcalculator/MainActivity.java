@@ -19,6 +19,7 @@ import com.example.solarcalculator.Adapter.SolarDataAdapter;
 import com.example.solarcalculator.BottomSheet.CalculateSolarBottomSheet;
 import com.example.solarcalculator.Model.SolarCalData;
 import com.example.solarcalculator.Model.User;
+import com.example.solarcalculator.viewmodel.DataViewModel;
 import com.example.solarcalculator.viewmodel.UserViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,6 +38,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,8 +50,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public static final String USER_LOGIN_KEY_INTENT_EXTRA ="com.example.solarcalculator_USER_KEY";
     public static final int RC_SIGN_IN = 0;
 
-    ArrayList<SolarCalData> solarCalDataList;
     private SolarDataAdapter solarDataAdapter;
+    private List<SolarCalData> dataList;
+
 
     //AddFile Dialog Views
     private TextInputEditText deviceNameEditText;
@@ -66,13 +69,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     boolean addFileDialogCalledFromFab;
 
     private SolarCalData dataToEdit;
-    private int dataToEditPosition;
 
-    private UserViewModel viewModel;
+    private DataViewModel dataViewModel;
+    private UserViewModel userViewModel;
     private User currentUser;
+
     GoogleSignInClient mGoogleSignInClient;
-    private GoogleSignInAccount acct;
-    //int RC_SIGN_IN = 0;
+    private GoogleSignInAccount googleSignInAccount;
+    private String googlePersonId;
+    private String personGivenName;
+    private String personGivenName1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,20 +88,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Toolbar toolbar=findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        acct = GoogleSignIn.getLastSignedInAccount(this);
         initViews();
-
 
     }
 
     private void initViews() {
-        solarCalDataList = new ArrayList<>();
-        solarDataAdapter = new SolarDataAdapter(solarCalDataList, this);
+        handler = new Handler();
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        dataViewModel = ViewModelProviders.of(this).get(DataViewModel.class);
+
+        dataList =new ArrayList<>();
+        solarDataAdapter = new SolarDataAdapter(dataViewModel);
         solarDataAdapter.setOnDataListListener(this);
 
         noInputTextView = findViewById(R.id.main_activity_no_input_text);
@@ -103,25 +108,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         recyclerView.setAdapter(solarDataAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         FloatingActionButton addFab = findViewById(R.id.main_activity_add_fab);
         calculateFab = findViewById(R.id.main_activity_calculate_fab);
         addFab.setOnClickListener(this);
         calculateFab.setOnClickListener(this);
 
-        handler = new Handler();
-        viewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
-        getLoggedInUserFromIntentExtra();
-        generateFirstDummyDataForList();
+        getLoggedInUser();
+        populateRecyclerviewWithData();
+
     }
 
-    private void getLoggedInUserFromIntentExtra() {
+    private void populateRecyclerviewWithData() {
+        dataViewModel.getAllData().observe(this, new Observer<List<SolarCalData>>() {
+            @Override
+            public void onChanged(List<SolarCalData> solarCalDataList) {
+                dataList.clear();
+                for(SolarCalData data:solarCalDataList){
+                    if(googleSignInAccount!=null){
+                        if(data.getGoogleUserId().equals(googlePersonId)){
+                            dataList.add(data);
+                        }
+                    }else {
+                        if(data.getRoomUserId()== currentUser.getId()) {
+                            dataList.add(data);
+                        }
+                    }
+                }
+                solarDataAdapter.summitList(dataList);
+            }
+        });
+    }
+
+    private void getLoggedInUser() {
         if (getSharePref().getLoggedUserId() != -1 &&getIntent()!=null) {
             currentUser = getIntent().getParcelableExtra(USER_KEY_INTENT_EXTRA);
             setNoItemText();
-            viewModel.setCurrentUser(currentUser);
         } else{
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
             setNoItemTextForGoogle();
         }
     }
@@ -131,17 +160,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setNoItemTextForGoogle() {
-        String personName = acct.getDisplayName();
-        String personGivenName = acct.getGivenName();
-        String personFamilyName = acct.getFamilyName();
-        String personEmail = acct.getEmail();
-        String personId = acct.getId();
-        noInputTextView.setText(String.format("Hello %s\nplease click the + icon to begin your solar calculations", personName));
+        String googlePersonName = googleSignInAccount.getDisplayName();
+        String personGivenName = googleSignInAccount.getGivenName();
+        String personFamilyName = googleSignInAccount.getFamilyName();
+        String personEmail = googleSignInAccount.getEmail();
+        googlePersonId = googleSignInAccount.getId();
+
+        currentUser.setFirstName(personGivenName);
+        currentUser.setLastName(personFamilyName);
+        currentUser.setEmail(personEmail);
+        setNoItemText();
     }
 
 
     private void openCalculationBottomSheet(List<SolarCalData> solarCalDataList, int userSunlightAccessInHours){
-        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours,currentUser);
+        CalculateSolarBottomSheet bottomSheet = CalculateSolarBottomSheet.newInstance(solarCalDataList, userSunlightAccessInHours, currentUser);
         bottomSheet.setCancelable(false);
         bottomSheet.show(getSupportFragmentManager(),null);
     }
@@ -160,7 +193,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void openAddFileDialog() {
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
         View view=View.inflate(this,R.layout.add_data_layout,null);
 
         deviceNameEditText = view.findViewById(R.id.addfile_device_name_editText);
@@ -201,31 +234,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     return;
                 }
 
-                String id=acct.getId();
-                if(acct!=null){
 
-                }
-                SolarCalData data = SolarCalData.getBuilder(deviceName)
+                SolarCalData.Builder builderData = SolarCalData.getBuilder(deviceName)
                         .amps(Integer.parseInt(deviceAmps))
                         .voltage(Integer.parseInt(deviceVolts))
                         .hoursUsedDaily(Integer.parseInt(deviceHours))
-                        .quantity(Integer.parseInt(deviceQty))
-                        .userId(currentUser.getId())
-                        .build();
+                        .quantity(Integer.parseInt(deviceQty));
 
+
+                if(googleSignInAccount !=null){
+                    builderData.googleUserId(googlePersonId);
+                    builderData.roomUserId(null);
+                } else{
+                    builderData.roomUserId(currentUser.getId());
+                    builderData.googleUserId(null);
+                }
+
+                SolarCalData data=builderData.build();
+
+                String msg = "";
                 if(addFileDialogCalledFromFab){
                     solarDataAdapter.addData(data);
+                    msg = "New appliance added";
                 } else {
-                    solarDataAdapter.modifyData(data,dataToEditPosition);
+                    data.setId(dataToEdit.getId());
+                    solarDataAdapter.modifyData(data);
+                    msg = "Edited Successfully";
                 }
 
 
+                final String finalMsg = msg;
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         hideProgressbar();
                         dialog.dismiss();
-                        showSnackbar("New appliance added");
+                        showSnackbar(finalMsg);
                         dataToEdit=null;
                     }
                 },500);
@@ -326,12 +370,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private void generateFirstDummyDataForList() {
-        SolarCalData data = SolarCalData.getBuilder("Dummy")
-                .amps(200).voltage(200).hoursUsedDaily(2).quantity(2).userId(getSharePref().getLoggedUserId()).build();
-        solarCalDataList.add(data);
-    }
-
 
     @Override
     public void showFab() {
@@ -361,8 +399,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_menu_clear_all:
-                int deletedItems = solarDataAdapter.clearAllData();
-                generateFirstDummyDataForList();
+                long deletedItems = solarDataAdapter.clearAllData(currentUser.getId());
                 setNoItemText();
                 if(deletedItems>0){
                     showSnackbar(deletedItems+" item(s) deleted");
@@ -374,8 +411,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_delete_account:
                 deleteAccount();
                 return true;
-            case R.id.Team_page:
-                openActivity();
+            case R.id.team_page:
+                openAboutActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -383,7 +420,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    private void openActivity() {
+    private void openAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
@@ -393,13 +430,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case 112:
-                dataToEditPosition=item.getGroupId();
+                int dataToEditPosition = item.getGroupId();
                 dataToEdit = solarDataAdapter.getDataAtPosition(dataToEditPosition);
                 addFileDialogCalledFromFab=false;
                 openAddFileDialog();
                 break;
             case 113:
-                solarDataAdapter.removeDataAtPosition(item.getGroupId());
+                solarDataAdapter.deleteData(solarDataAdapter.getDataAtPosition(item.getGroupId()));
                 showSnackbar("Item deleted");
                 break;
 
@@ -408,9 +445,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void deleteAccount() {
-        viewModel.deleteUser(currentUser);
-        showToast("Account Deleted Successfully");
-        logout();
+        //TODO should have a confirmation dialog
+        if(mGoogleSignInClient!=null){
+            //TODO should be handld by Etim
+            finish();
+        } else{
+            solarDataAdapter.clearAllData(currentUser.getId());
+            userViewModel.deleteUser(currentUser);
+            showToast("Account Deleted Successfully");
+            logout();
+        }
     }
 
     private void logout() {

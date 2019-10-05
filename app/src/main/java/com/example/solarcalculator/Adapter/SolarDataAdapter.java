@@ -1,33 +1,31 @@
 package com.example.solarcalculator.Adapter;
-import android.content.Context;
+
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.solarcalculator.Model.SolarCalData;
 import com.example.solarcalculator.R;
+import com.example.solarcalculator.viewmodel.DataViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.solarcalculator.Model.SolarCalData;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.ViewHolder> {
-    private final Context context;
-    private ArrayList<SolarCalData> dataList;
+    private ArrayList<SolarCalData> dataList=new ArrayList<>();
+    private DataViewModel dataViewModel;
 
     private DataListListener listListener;
 
-    public SolarDataAdapter(ArrayList<SolarCalData> dataList, Context context) {
-        this.dataList = dataList;
-        this.context = context;
+    public SolarDataAdapter(DataViewModel dataViewModel) {
+        this.dataViewModel=dataViewModel;
     }
-
 
     @NonNull
     @Override
@@ -47,7 +45,7 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
         holder.Hrs_View.setText(String.valueOf(sdevice.getHoursUsedDaily()));
         holder.Watts_View.setText(String.valueOf(sdevice.getWattage()));
 
-        if(position == 0){
+        if (position == 0) {
             //This hack requires avoiding calculating first data in list, BottomSheet will not calculate first data
             holder.Appliance_View.setText("Appliance");
             holder.Qty_View.setText("Qty");
@@ -60,9 +58,9 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
 
         /*interface implementation to observe list for calculation fab to either display or not
         ViewModel is a newer better alternative too*/
-        if(dataList.size()>1){
+        if (dataList.size() > 1) {
             listListener.showFab();
-            if(dataList.size()==2){
+            if (dataList.size() == 2) {
                 listListener.listHasOneItem();
             }
         } else {
@@ -76,34 +74,46 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
     }
 
     public void addData(SolarCalData data){
-        dataList.add(data);
-        notifyDataSetChanged();
+        dataViewModel.insertData(data);
     }
 
-    public void modifyData(SolarCalData editedData, int oldDataPosition){
-        dataList.remove(oldDataPosition);
-        dataList.add(oldDataPosition,editedData);
-        notifyDataSetChanged();
+    public void modifyData(SolarCalData editedData){
+        dataViewModel.updateData(editedData);
     }
 
-    public List<SolarCalData> getAllData(){
+    public void deleteData(SolarCalData data){
+        dataViewModel.deleteData(data);
+    }
+
+    public int clearAllData(long UserId) {
+        int size=dataList.size();
+        dataViewModel.deleteAllData(UserId);
+        return size-1;
+    }
+
+    public List<SolarCalData> getAllData() {
         return dataList;
     }
 
-    public void removeDataAtPosition(int position){
-        dataList.remove(position);
-        notifyDataSetChanged();
-    }
-
-    public SolarCalData getDataAtPosition(int position){
+    public SolarCalData getDataAtPosition(int position) {
         return dataList.get(position);
     }
 
-    public int clearAllData() {
-        int size=dataList.size();
+    public void summitList(List<SolarCalData> newDataList) {
         dataList.clear();
+        if (newDataList.size() > 0) {
+            dataList.addAll(newDataList);
+            dataList.add(0, generateFirstDummyDataForList());
+        } else {
+            dataList.add(0, generateFirstDummyDataForList());
+        }
         notifyDataSetChanged();
-        return size-1;
+    }
+
+    //Method created because of first position hack
+    private SolarCalData generateFirstDummyDataForList() {
+        return SolarCalData.getBuilder("Dummy")
+                .amps(200).voltage(200).hoursUsedDaily(2).quantity(2).roomUserId((long) -1).build();
     }
 
 
@@ -128,7 +138,7 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                     contextMenu.setHeaderTitle("Choose an option");
-                    if(getAdapterPosition()!=0){ //if statement done because of first fake item in datalist
+                    if (getAdapterPosition() != 0) { //if statement done because of first fake item in datalist
                         contextMenu.add(getAdapterPosition(), 112, 1, "Edit");
                         contextMenu.add(getAdapterPosition(), 113, 2, "Delete");
                     }
@@ -139,14 +149,15 @@ public class SolarDataAdapter extends RecyclerView.Adapter<SolarDataAdapter.View
     }
 
 
-
-    public interface DataListListener{
+    public interface DataListListener {
         void showFab();
+
         void hideFab();
+
         void listHasOneItem();
     }
 
-    public void setOnDataListListener(DataListListener listListener){
-        this.listListener=listListener;
+    public void setOnDataListListener(DataListListener listListener) {
+        this.listListener = listListener;
     }
 }

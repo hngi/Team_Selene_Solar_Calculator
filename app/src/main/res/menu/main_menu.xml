@@ -5,15 +5,19 @@
         android:id="@+id/main_menu_clear_all"
         android:title="@string/clear_all"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/team_page"
+        android:title="@string/about_the_team"/>
+
     <item
         android:id="@+id/main_menu_logout"
         android:title="@string/logout"
         android:icon="@drawable/ic_settings_power_black_24dp"/>
+
     <item
         android:id="@+id/main_menu_delete_account"
         android:title="@string/delete_account"/>
-    <item
-        android:id="@+id/Team_page"
-        android:title="@string/about_the_team"/>
+
 
 </menu>

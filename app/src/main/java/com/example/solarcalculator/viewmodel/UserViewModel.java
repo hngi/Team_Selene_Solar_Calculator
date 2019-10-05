@@ -9,13 +9,10 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 public class UserViewModel extends AndroidViewModel {
 
     private final Repository repository;
-    private MutableLiveData<User> currentUser=new MutableLiveData<>();
 
     public UserViewModel(@NonNull Application application) {
         super(application);
@@ -38,11 +35,4 @@ public class UserViewModel extends AndroidViewModel {
         return repository.getallUsers();
     }
 
-    public void setCurrentUser(User user) {
-        currentUser.setValue(user);
-    }
-
-    public LiveData<User> getCurrentUser() {
-        return currentUser;
-    }
 }

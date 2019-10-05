@@ -1,7 +1,5 @@
 package com.example.solarcalculator.Model;
 
-import android.media.Image;
-
 public class Developer {
     private Integer mImage;
     private String mName;

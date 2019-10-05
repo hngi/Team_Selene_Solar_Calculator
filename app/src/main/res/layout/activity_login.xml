@@ -105,13 +105,6 @@
         android:textColor="@android:color/white"
         android:backgroundTint="@color/colorAccent"/>
 
-        <com.shobhitpuri.custombuttons.GoogleSignInButton
-            android:id="@+id/google_signIn_btn"
-            android:layout_marginTop="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/google_sign_in"
-            app:isDarkTheme="true" />
 
     <TextView
         android:id="@+id/login_activity_register_text"
@@ -125,15 +118,31 @@
         android:textColor="@android:color/white"
         android:text="@string/login_account_register_here" />
 
-    <ProgressBar
-        android:id="@+id/login_activity_progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:visibility="invisible" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="64dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:text="@string/or" />
+
+        <com.shobhitpuri.custombuttons.GoogleSignInButton
+            android:id="@+id/google_signIn_btn"
+            android:layout_marginTop="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/google_sign_in"
+            app:isDarkTheme="true" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 
+    <ProgressBar
+        android:id="@+id/login_activity_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:visibility="invisible" />
 </RelativeLayout>
