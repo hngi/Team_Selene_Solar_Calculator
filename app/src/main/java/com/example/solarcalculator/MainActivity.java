@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -361,8 +360,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.main_menu_delete_account:
                 deleteAccount();
                 return true;
-            case R.id.about_the_team:
-                openActivity();
+            case R.id.team_page:
+                openAboutActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -370,7 +369,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    private void openActivity() {
+    private void openAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
